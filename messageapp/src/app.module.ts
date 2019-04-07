@@ -1,11 +1,26 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { NameController } from './name/name.controller';
+import { MensajesController } from './mensajes/mensajes.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MensajesService } from './mensajes/mensajes.service';
+import { Mensaje } from './mensajes/entities/mensaje.entity';
 
 @Module({
-  imports: [],
-  controllers: [AppController, NameController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'usertest',
+      password: 'mysql123456',
+      database: 'mensaje_db',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
+    }),
+    TypeOrmModule.forFeature([Mensaje])
+  ],
+  controllers: [AppController, MensajesController],
+  providers: [AppService, MensajesService],
 })
-export class AppModule {}
+export class AppModule { }
